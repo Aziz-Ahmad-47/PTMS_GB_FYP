@@ -37,25 +37,23 @@ from database.chat_db import (
 
 load_dotenv()
 
-GROQ_API_KEY = os.getenv(
-    "GROQ_API_KEY"
-)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 if not GROQ_API_KEY:
+    try:
+        GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
+    except Exception:
+        GROQ_API_KEY = None
 
-    st.error(
-        "GROQ_API_KEY is missing from your .env file."
-    )
-
+if not GROQ_API_KEY:
+    st.error("GROQ_API_KEY is missing.")
     st.stop()
-
 
 client = Groq(
     api_key=GROQ_API_KEY
 )
 
 MODEL = "openai/gpt-oss-20b"
-
 
 st.set_page_config(
     page_title="AI TravelMate",
